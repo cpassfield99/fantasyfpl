@@ -1,0 +1,109 @@
+,season,GW,fixture,team,team_goals,team_goals_against,was_home,opponent_team,team_points
+2,2020-21,1.0,2,Arsenal,3,0,False,Fulham,3
+16,2020-21,2.0,9,Arsenal,2,1,True,West Ham,3
+44,2020-21,3.0,23,Arsenal,1,3,False,Liverpool,0
+56,2020-21,4.0,29,Arsenal,2,1,True,Sheffield Utd,3
+86,2020-21,5.0,44,Arsenal,0,1,False,Man City,0
+96,2020-21,6.0,49,Arsenal,0,1,True,Leicester,0
+126,2020-21,7.0,64,Arsenal,1,0,False,Man Utd,3
+136,2020-21,8.0,69,Arsenal,0,3,True,Aston Villa,0
+162,2020-21,9.0,82,Arsenal,0,0,False,Leeds,1
+176,2020-21,10.0,89,Arsenal,1,2,True,Wolves,0
+208,2020-21,11.0,106,Arsenal,0,2,False,Spurs,0
+214,2020-21,12.0,109,Arsenal,0,1,True,Burnley,0
+234,2020-21,13.0,119,Arsenal,1,1,True,Southampton,1
+262,2020-21,14.0,133,Arsenal,1,2,False,Everton,0
+274,2020-21,15.0,139,Arsenal,3,1,True,Chelsea,3
+294,2020-21,16.0,149,Arsenal,1,0,False,Brighton,3
+326,2020-21,17.0,168,Arsenal,4,0,False,West Brom,3
+330,2020-21,18.0,169,Arsenal,0,0,True,Crystal Palace,1
+350,2020-21,19.0,179,Arsenal,3,0,True,Newcastle,3
+386,2020-21,20.0,197,Arsenal,3,1,False,Southampton,3
+390,2020-21,21.0,199,Arsenal,0,0,True,Man Utd,1
+422,2020-21,22.0,215,Arsenal,1,2,False,Wolves,0
+430,2020-21,23.0,219,Arsenal,0,1,False,Aston Villa,0
+454,2020-21,24.0,229,Arsenal,4,2,True,Leeds,3
+476,2020-21,25.0,239,Arsenal,0,1,True,Man City,0
+504,2020-21,26.0,253,Arsenal,3,1,False,Leicester,3
+534,2020-21,27.0,261,Arsenal,1,1,False,Burnley,1
+552,2020-21,28.0,269,Arsenal,2,1,True,Spurs,3
+578,2020-21,29.0,288,Arsenal,3,3,False,West Ham,1
+580,2020-21,30.0,289,Arsenal,0,3,True,Liverpool,0
+612,2020-21,31.0,305,Arsenal,3,0,False,Sheffield Utd,3
+622,2020-21,32.0,309,Arsenal,1,1,True,Fulham,1
+640,2020-21,33.0,319,Arsenal,0,1,True,Everton,0
+666,2020-21,34.0,335,Arsenal,2,0,False,Newcastle,3
+680,2020-21,35.0,339,Arsenal,3,1,True,West Brom,3
+702,2020-21,35.0,354,Arsenal,1,0,False,Chelsea,3
+726,2020-21,37.0,362,Arsenal,3,1,False,Crystal Palace,3
+740,2020-21,38.0,369,Arsenal,2,0,True,Brighton,3
+760,2021-22,1.0,1,Arsenal,0,2,False,Brentford,0
+794,2021-22,2.0,18,Arsenal,0,2,True,Chelsea,0
+806,2021-22,3.0,24,Arsenal,0,5,False,Man City,0
+820,2021-22,4.0,31,Arsenal,1,0,True,Norwich,3
+844,2021-22,5.0,43,Arsenal,1,0,False,Burnley,3
+860,2021-22,6.0,51,Arsenal,3,1,True,Spurs,3
+880,2021-22,7.0,61,Arsenal,0,0,False,Brighton,1
+900,2021-22,8.0,71,Arsenal,2,2,True,Crystal Palace,1
+920,2021-22,9.0,81,Arsenal,3,1,True,Aston Villa,3
+944,2021-22,10.0,93,Arsenal,2,0,False,Leicester,3
+960,2021-22,11.0,101,Arsenal,1,0,True,Watford,3
+986,2021-22,12.0,114,Arsenal,0,4,False,Liverpool,0
+1000,2021-22,13.0,121,Arsenal,2,0,True,Newcastle,3
+1024,2021-22,14.0,134,Arsenal,2,3,False,Man Utd,0
+1040,2021-22,15.0,142,Arsenal,1,2,False,Everton,0
+1058,2021-22,16.0,151,Arsenal,3,0,True,Southampton,3
+1076,2021-22,17.0,161,Arsenal,2,0,True,West Ham,3
+1090,2021-22,18.0,173,Arsenal,4,1,False,Leeds,3
+1106,2021-22,19.0,187,Arsenal,5,0,False,Norwich,3
+1130,2021-22,21.0,201,Arsenal,1,2,True,Man City,0
+1170,2021-22,23.0,221,Arsenal,0,0,True,Burnley,1
+1198,2021-22,24.0,236,Arsenal,1,0,False,Wolves,3
+1234,2021-22,26.0,191,Arsenal,2,1,True,Wolves,3
+1236,2021-22,26.0,251,Arsenal,2,1,True,Brentford,3
+1296,2021-22,28.0,279,Arsenal,3,2,False,Watford,3
+1306,2021-22,29.0,261,Arsenal,0,2,True,Liverpool,0
+1308,2021-22,29.0,281,Arsenal,2,0,True,Leicester,3
+1328,2021-22,30.0,291,Arsenal,1,0,False,Aston Villa,3
+1344,2021-22,31.0,304,Arsenal,0,3,False,Crystal Palace,0
+1358,2021-22,32.0,311,Arsenal,1,2,True,Brighton,0
+1380,2021-22,33.0,243,Arsenal,4,2,False,Chelsea,3
+1394,2021-22,33.0,326,Arsenal,0,1,False,Southampton,0
+1402,2021-22,34.0,331,Arsenal,3,1,True,Man Utd,3
+1440,2021-22,35.0,349,Arsenal,2,1,False,West Ham,3
+1446,2021-22,36.0,218,Arsenal,0,3,False,Spurs,0
+1456,2021-22,36.0,351,Arsenal,2,1,True,Leeds,3
+1488,2021-22,37.0,365,Arsenal,0,2,False,Newcastle,0
+1500,2021-22,38.0,371,Arsenal,5,1,True,Everton,3
+1520,2022-23,1.0,1,Arsenal,2,0,False,Crystal Palace,3
+1540,2022-23,2.0,11,Arsenal,4,2,True,Leicester,3
+1560,2022-23,3.0,21,Arsenal,3,0,False,Bournemouth,3
+1580,2022-23,4.0,31,Arsenal,2,1,True,Fulham,3
+1600,2022-23,5.0,41,Arsenal,2,1,True,Aston Villa,3
+1630,2022-23,6.0,56,Arsenal,1,3,False,Man Utd,0
+1642,2022-23,8.0,72,Arsenal,3,0,False,Brentford,3
+1654,2022-23,9.0,81,Arsenal,3,1,True,Spurs,3
+1674,2022-23,10.0,91,Arsenal,3,2,True,Liverpool,3
+1700,2022-23,11.0,104,Arsenal,1,0,False,Leeds,3
+1744,2022-23,13.0,127,Arsenal,1,1,False,Southampton,1
+1752,2022-23,14.0,131,Arsenal,5,0,True,Nott'm Forest,3
+1774,2022-23,15.0,142,Arsenal,1,0,False,Chelsea,3
+1810,2022-23,16.0,160,Arsenal,2,0,False,Wolves,3
+1812,2022-23,17.0,161,Arsenal,3,1,True,West Ham,3
+1834,2022-23,18.0,172,Arsenal,4,2,False,Brighton,3
+1854,2022-23,19.0,181,Arsenal,0,0,True,Newcastle,1
+1894,2022-23,20.0,199,Arsenal,2,0,False,Spurs,3
+1898,2022-23,21.0,201,Arsenal,3,2,True,Man Utd,3
+1928,2022-23,22.0,215,Arsenal,0,1,False,Everton,0
+1940,2022-23,23.0,111,Arsenal,1,3,True,Man City,0
+1942,2022-23,23.0,221,Arsenal,1,1,True,Brentford,1
+1962,2022-23,24.0,231,Arsenal,4,2,False,Aston Villa,3
+1982,2022-23,25.0,61,Arsenal,4,0,True,Everton,3
+1996,2022-23,25.0,246,Arsenal,1,0,False,Leicester,3
+2002,2022-23,26.0,251,Arsenal,3,2,True,Bournemouth,3
+2032,2022-23,27.0,264,Arsenal,3,0,False,Fulham,3
+2046,2022-23,28.0,271,Arsenal,4,1,True,Crystal Palace,3
+2072,2022-23,29.0,281,Arsenal,4,1,True,Leeds,3
+2102,2022-23,30.0,296,Arsenal,2,2,False,Liverpool,1
+2128,2022-23,31.0,309,Arsenal,2,2,False,West Ham,1
+2132,2022-23,32.0,311,Arsenal,3,3,True,Southampton,1
