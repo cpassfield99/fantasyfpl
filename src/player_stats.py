@@ -228,6 +228,10 @@ class CombineTeamAndPlayers():
 
         df['player_season_fixture_number'] = df['season_matches_played_player_team'] +1
 
+        # Additional cleaning
+        df['position_player'] = df['position_player'].replace('GKP', 'GK')
+
+
         return df
 
         
