@@ -218,8 +218,8 @@ class CombineTeamAndPlayers():
         
         df = pd.merge(df,
                        opponent_team_data,
-                       left_on=['season_player', 'fixture_player', 'opponent_team_player'], 
-                       right_on=['season_opp_team', 'fixture_opp_team', 'team_opp_team'], 
+                       left_on=['season_player', 'fixture_player', 'opponent_team_player'],
+                       right_on=['season_opp_team', 'fixture_opp_team', 'team_opp_team'],
                        how='inner')
         df = df.loc[:,~df.T.duplicated(keep='first')]
 
@@ -233,7 +233,3 @@ class CombineTeamAndPlayers():
 
 
         return df
-
-        
-
-
