@@ -1,9 +1,10 @@
 import streamlit as st
 import plotly.express as px
 import pandas as pd
+from player_correlation import player_correlation
 
 # load the data
-final_df = pd.read_csv('../data/processed_data/played_df.csv')
+final_df = pd.read_csv('../data/processed_data/complete_df.csv')
 
 # define the dropdown menus
 players = final_df['name_player'].unique()
