@@ -22,6 +22,8 @@ class PreprocessData:
         self.data = self.concat_data(self.pp_2021, self.pp_2122, self.pp_2223)
 
         self.data = self.generate_fixture_id(self.data)
+        
+        self.data = self.name_mapping(self.data)
     
     def preprocess_team(self,df):
         df = df[['id','name']]
@@ -47,7 +49,48 @@ class PreprocessData:
         df['fixture_id'] = df['season_temp'] + df['fixture_string']
         df = df.drop(columns = ['fixture_string', 'season_temp'])
         return df
-        
+    
+    def name_mapping(self,df):
+        '''Only a temporary fix, need to figure out longer term string matching solution'''
+        string_mapping = {
+            'Benjamin Chilwell' : 'Ben Chilwell',
+            'Bernardo Fernandes Da Silva Junior':'Bernardo Fernandes da Silva Junior',
+            'Bernardo Mota Veiga de Carvalho e Silva':'Bernardo Veiga de Carvalho e Silva',
+            'Björn Engels':'Bjorn Engels',
+            'Bobby Decordova-Reid':'Bobby De Cordova-Reid',
+            'Bruno André Cavaco Jordão':'Bruno André Cavaco Jordao',
+            'Bruno Miguel Borges Fernandes':'Bruno Borges Fernandes',
+            'Carlos Vinícius Alves Morais':'Carlos Vinicius Alves Morais',
+            'José Diogo Dalot Teixeira':'Diogo Dalot Teixeira',
+            'Emerson Aparecido Leite de Souza Junior':'Emerson Leite de Souza Junior',
+            'Emiliano Martínez':'Emiliano Martínez Romero',
+            'Gabriel Teodoro Martinelli Silva':'Gabriel Martinelli Silva',
+            'Junior Firpo Adames':'Héctor Junior Firpo Adames',
+            'Ivan Neves Abreu Cavaleiro':'Ivan Ricardo Neves Abreu Cavaleiro',
+            'Joseph Willock':'Joe Willock',
+            'Joshua Wilson-Esbrand':'Josh Wilson-Esbrand',
+            'Lyanco Silveira Neves Vojnovic':'Lyanco Evangelista Silveira Neves Vojnovic',
+            'Matija Šarkić':'Matija Šarkic',
+            'Matija Šarkic':'Matija Sarkic',
+            'André Filipe Tavares Gomes':'André Tavares Gomes',
+            'Mattéo Guendouzi':'Matteo Guendouzi',  
+            'Mbwana Samatta':'Mbwana Ally Samatta',
+            'Willian Borges Da Silva':'Willian Borges da Silva',
+            'William Smallbone' : 'Will Smallbone',
+            'Thomas McGill':'Tom McGill',
+            'Rúben Santos Gato Alves Dias':'Rúben Gato Alves Dias',
+            'Roméo Lavia':'Romeo Lavia',
+            'Rúben da Silva Neves':'Rúben Diogo da Silva Neves',
+            'Rayan Ait Nouri':'Rayan Aït-Nouri',
+            'Ricardo Barbosa Pereira':'Ricardo Domingos Barbosa Pereira',
+            'Finley Stevens':'Fin Stevens',
+            'Matt Clarke':'Matthew Clarke'
+            }
+
+        df['name'] = df['name'].replace(string_mapping)
+        return df
+
+    
     def get_preprocessed_data(self):
         return self.data
          
