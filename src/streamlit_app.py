@@ -17,6 +17,7 @@ data = pd.read_csv('data/processed_data/complete_df.csv')
 
 # # create the scatter plot
 # fig = px.scatter(filtered_df, x='player_season_fixture_number', y='value_player', color='season')
+st.set_option('client.showErrorDetails', False)
 
 players = data['name_player'].unique()
 player1 = st.selectbox('Select Player 1 for Correlation:', ['', *players])
