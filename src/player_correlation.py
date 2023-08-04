@@ -1,4 +1,5 @@
 import pandas as pd
+import plotly.express as px
 
 # Function to compare correlation of overall points between two players
 def player_correlation (df, player1, player2, correlation_attribute):
@@ -10,8 +11,7 @@ def player_correlation (df, player1, player2, correlation_attribute):
     merged_df = pd.merge(df_player1, df_player2, on='fixture_id_player', suffixes=('_' + player1,'_' + player2))
     
     correlation = merged_df[correlation_attribute + '_' + player1].corr(merged_df[correlation_attribute + '_' + player2])
-
     fig = px.scatter(merged_df, merged_df[correlation_attribute + '_' + player1], merged_df[correlation_attribute + '_' + player2], trendline='ols')
     fig.show()
     
-    return correlation
+    return correlation, fig
