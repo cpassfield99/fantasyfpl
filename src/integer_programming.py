@@ -1,7 +1,7 @@
 import pandas as pd
 import pulp
 
-def optimise_team(df):
+def optimise_team(df, max_cost, defenders, midfielders, attackers):
     """
     Given a dataframe with football player information, this function selects
     the optimal team composition that maximizes the sum of total_points while
@@ -36,17 +36,17 @@ def optimise_team(df):
     problem += objective_function
 
     # Constraints
-    problem += (pulp.lpSum(df['is_selected'] * df['now_cost']) <= 830)
+    problem += (pulp.lpSum(df['is_selected'] * df['now_cost']) <= max_cost)
 
     # Position constraints
-    position_dict = {'GK': 1, 'DEF': 3, 'MID': 4, 'FWD': 3}
+    position_dict = {'GK': 1, 'DEF': defenders, 'MID': midfielders, 'FWD': attackers}
     for position, max_count in position_dict.items():
         problem += (pulp.lpSum(df[df['element_type'] == position]['is_selected']) == max_count)
 
-    # Team constraints
-    teams = df['team'].unique()
-    for team in teams:
-        problem += (pulp.lpSum(df[df['team'] == team]['is_selected']) <= 3)
+    # # Team constraints
+    # teams = df['team'].unique()
+    # for team in teams:
+    #     problem += (pulp.lpSum(df[df['team'] == team]['is_selected']) <= 3)
 
     # Solve the optimization problem
     problem.solve()
