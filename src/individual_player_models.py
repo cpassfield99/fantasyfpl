@@ -7,8 +7,8 @@ from sklearn.model_selection import KFold, RandomizedSearchCV, train_test_split,
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score, mean_absolute_percentage_error
 from sklearn.linear_model import LinearRegression
 
-class RandomForestIndividualPlayer:
-    def __init__(self, df, player_list, feature_candidates):
+class Modelling:
+    def __init__(self, df, player_list, feature_candidates, model, model_parameters=None):
         '''
         Initialize the RandomForestIndividualPlayer object.
         
@@ -19,6 +19,8 @@ class RandomForestIndividualPlayer:
         '''
         self.df = df.copy()
         self.player_list = player_list
+        self.model = model
+        self.model_parameters = model_parameters
         self.feature_candidates = feature_candidates
     
     def create_feature_count_dict(self):
@@ -50,44 +52,53 @@ class RandomForestIndividualPlayer:
         df = df.loc[:, self.feature_candidates]
         return df
     
-    def random_forest_model(self, df, num_feature_subsets=20):
+    def train_test_splitting(self, df):
+        '''
+        Perform a consistent train test split for ease of comparability between models
+        
+        Parameters:
+            df (pd.DataFrame): DataFrame containing player data for modelling.
+            
+        Returns:
+            pd.DataFrame: Train and test sets for X and y'''
+        
+        X = df.drop(columns=['total_points_player'])
+        y = df['total_points_player']
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+        return X_train, X_test, y_train, y_test
+    
+    def build_model(self,
+                  X_train, 
+                  X_test, 
+                  y_train, 
+                  y_test,
+                  model,
+                  model_hyperparameters, 
+                  num_feature_subsets=20):
         '''
         Perform random forest modeling for a given DataFrame.
         
         Parameters:
-            df (pd.DataFrame): DataFrame containing player data for modeling.
+            X_train (pd.DataFrame): DataFrame containing player data for training.
+            X_test (pd.DataFrame): DataFrame containing player data for testing.
+            y_train (pd.DataFrame): DataFrame containing training target.
+            y_test (pd.DataFrame): DataFrame containing test target.
             num_feature_subsets (int): Number of random feature subsets to consider.
         
         Returns:
             tuple: Best feature subset (list of feature names) and corresponding mean absolute error.
         '''
-        X = df.drop(columns=['total_points_player'])
-        y = df['total_points_player']
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-        # Random search to tune hyperparameters.
-        param_dist = {
-            'n_estimators': [50, 100, 150],
-            'max_features': ['log2', 'sqrt'],
-            'max_depth': [None, 5, 10],
-            'min_samples_split': [2, 5],
-            'min_samples_leaf': [1, 2],
-            'bootstrap': [True, False]
-        }
-
         best_mae = float('inf')
         best_feature_subset = None
         
         for _ in range(num_feature_subsets):
 
-            selected_features = np.random.choice(X.columns, size=np.random.randint(6, len(X.columns) + 1), replace=False)
+            selected_features = np.random.choice(X_train.columns, size=np.random.randint(6, len(X_train.columns) + 1), replace=False)
             X_train_subset = X_train[selected_features]
             X_test_subset = X_test[selected_features]
-
-            base_model = RandomForestRegressor(random_state=42)
             random_search = RandomizedSearchCV(
-                estimator=base_model,
-                param_distributions=param_dist,
+                estimator=model,
+                param_distributions=model_hyperparameters,
                 n_iter=5,
                 scoring='neg_mean_absolute_error',
                 cv=5,
@@ -121,17 +132,26 @@ class RandomForestIndividualPlayer:
         '''
         feature_dict = self.create_feature_count_dict()
         players_used = 0
+        player_model_scores = {}
         
         for player in self.player_list:
             player_df = self.df[self.df['name_player'] == player].copy()
             player_df = self.player_model_preprocessing(player_df)
-            best_features, mae_score = self.random_forest_model(player_df, num_feature_subsets)
+            X_train, X_test, y_train, y_test = self.train_test_splitting(player_df)
+            best_features, mae_score = self.build_model(X_train,
+                                                      X_test,
+                                                      y_train,
+                                                      y_test,
+                                                      self.model,
+                                                      self.model_parameters,
+                                                      num_feature_subsets)
+
+            player_model_scores[player] = mae_score    
 
             if mae_score < 2:
                 players_used += 1
-
                 for value in best_features:
                     if value in feature_dict:
                         feature_dict[value] += 1
 
-        return feature_dict, players_used
+        return feature_dict, players_used, player_model_scores
