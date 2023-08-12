@@ -1,14 +1,15 @@
 import pandas as pd
 import numpy as np
+
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import KFold, RandomizedSearchCV, train_test_split, GridSearchCV, cross_val_score
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score, mean_absolute_percentage_error
-from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import LinearRegression, Ridge
 
 class Modelling:
-    def __init__(self, df, player_list, feature_candidates, model, model_parameters=None):
+    def __init__(self, df, player_list, feature_candidates, model, model_hyperparameters=None):
         '''
         Initialize the RandomForestIndividualPlayer object.
         
@@ -20,7 +21,7 @@ class Modelling:
         self.df = df.copy()
         self.player_list = player_list
         self.model = model
-        self.model_parameters = model_parameters
+        self.model_hyperparameters = model_hyperparameters
         self.feature_candidates = feature_candidates
     
     def create_feature_count_dict(self):
@@ -90,14 +91,19 @@ class Modelling:
         '''
         best_mae = float('inf')
         best_feature_subset = None
-        
+
+        pipeline = Pipeline(steps= [
+            ('scaler', StandardScaler()),
+            ('model', model)
+        ])
+
         for _ in range(num_feature_subsets):
 
             selected_features = np.random.choice(X_train.columns, size=np.random.randint(6, len(X_train.columns) + 1), replace=False)
             X_train_subset = X_train[selected_features]
             X_test_subset = X_test[selected_features]
             random_search = RandomizedSearchCV(
-                estimator=model,
+                estimator=pipeline,
                 param_distributions=model_hyperparameters,
                 n_iter=5,
                 scoring='neg_mean_absolute_error',
@@ -108,16 +114,16 @@ class Modelling:
             )
 
             random_search.fit(X_train_subset, y_train)
-            best_model = random_search.best_estimator_
-            y_pred = best_model.predict(X_test_subset)
+            best_model_for_features = random_search.best_estimator_
+            y_pred = best_model_for_features.predict(X_test_subset)
             test_mae = mean_absolute_error(y_test, y_pred)
 
             if test_mae < best_mae:
                 best_mae = test_mae
                 best_feature_subset = selected_features
-                best_model = random_search.best_estimator_
+                best_model = best_model_for_features
 
-        return best_feature_subset, best_mae
+        return best_feature_subset, best_model, best_mae
     
     def optimise_feature_selection(self, num_feature_subsets=20):
         '''
@@ -138,20 +144,95 @@ class Modelling:
             player_df = self.df[self.df['name_player'] == player].copy()
             player_df = self.player_model_preprocessing(player_df)
             X_train, X_test, y_train, y_test = self.train_test_splitting(player_df)
-            best_features, mae_score = self.build_model(X_train,
-                                                      X_test,
-                                                      y_train,
-                                                      y_test,
-                                                      self.model,
-                                                      self.model_parameters,
-                                                      num_feature_subsets)
+            player_best_features, player_best_model, player_mae_score = self.build_model(X_train,
+                                                                                            X_test,
+                                                                                            y_train,
+                                                                                            y_test,
+                                                                                            self.model,
+                                                                                            self.model_hyperparameters,
+                                                                                            num_feature_subsets)
 
-            player_model_scores[player] = mae_score    
+            player_model_scores[player] = player_mae_score   
 
-            if mae_score < 2:
+            if player_mae_score < 2:
                 players_used += 1
-                for value in best_features:
+                for value in player_best_features:
                     if value in feature_dict:
                         feature_dict[value] += 1
 
-        return feature_dict, players_used, player_model_scores
+        return feature_dict, players_used, player_model_scores, player_best_features, player_best_model
+    
+def high_points_by_position(df, position, points_threshold):
+    '''Creates a datafame of the players in a specified position that scored over the points threshold in a season.'''
+    df = df.copy()
+    df = df[df['position_player'] == position]
+    grouped_df = df.groupby(['name_player', 'season'])['total_points_player'].sum().reset_index()
+    high_points_df = grouped_df[grouped_df['total_points_player']>points_threshold]
+    player_names = high_points_df['name_player'].unique()
+    return player_names
+
+
+if __name__ == "__main__":
+
+    df = pd.read_csv("data/processed_data/complete_df.csv")
+    high_scoring_gks = high_points_by_position(df, 'GK', 120)
+
+    candidate_columns =['total_points_player',
+                    'last_5_team_match_points',
+                    'last_5_team_goals',
+                    'last_5_player_goals',
+                    'last_5_games_points_player',
+                    'last_5_ind_goals_ratio_player',
+                    'last_5_ind_assists_ratio_player',
+                    'season_goals_per_match_player_team',
+                    'last_5_team_match_points_opp_team',
+                    'last_5_team_against_opp_team',
+                    'season_goals_against_per_match_opp_team',
+                    'season_points_per_match_opp_team',
+                    'transfers_in_player',
+                    'transfers_out_player',
+                    'was_home_player',
+                    'last_5_team_against',
+                    'season_goals_against_per_match_player_team',
+                    'last_5_team_goals_opp_team',
+                    ]
+
+    random_forest_params = {
+                'model__n_estimators': [50, 100, 150],
+                'model__max_features': ['log2', 'sqrt'],
+                'model__max_depth': [None, 5, 10],
+                'model__min_samples_split': [2, 5],
+                'model__min_samples_leaf': [1, 2],
+                'model__bootstrap': [True, False]
+            }
+
+    ridge_params  = {
+        'model__alpha': [0, 0.0001, 0.001, 0.01, 0.1],
+    }
+
+    decision_tree_params = {
+        'splitter':["best", "random"],
+        'max_depth': [3,5,7],
+    }
+
+    kneighbors_parameters = {
+        'n_neighbors':[3,5,7,10]
+    }
+
+    player_model = Modelling(df, high_scoring_gks, candidate_columns, Ridge(), ridge_params)
+    feature_counts, player_count, player_mae, best_features, best_model = player_model.optimise_feature_selection(5)
+
+    mean_mape = np.mean(list(player_mae.values()))
+
+    print("Player Model MAE Scores:")
+    for player, mae in player_mae.items():
+        print(f"{player}: {mae}")
+
+    print("\n")
+    print(f"Mean mape is {mean_mape}\n")
+    print(f"The number of players used was {player_count}\n")
+    for feature, count in feature_counts.items():
+        print(f"{feature}: {count}")
+
+    
+
