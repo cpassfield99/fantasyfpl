@@ -25,8 +25,10 @@ class PreprocessData:
 
         self.data = self._concat_data(self.pp_2021, self.pp_2122, self.pp_2223)
 
-        self.data = self.generate_fixture_id(self.data)
-        self.data = self.name_mapping(self.data)
+        self.data = self._generate_fixture_id(self.data)
+        self.data = self._name_mapping(self.data)
+        self.data = self._kickout_time_conversion(self.data)
+
 
     def _validate_file_paths(self, *file_paths):
         """
@@ -125,7 +127,7 @@ class PreprocessData:
 
         return concatenated_df
     
-    def generate_fixture_id(self, df):
+    def _generate_fixture_id(self, df):
         """
         Generates unique fixture IDs based on season and fixture number.
 
@@ -144,7 +146,7 @@ class PreprocessData:
         df = df.drop(columns = ['fixture_string', 'season_temp'])
         return df
     
-    def name_mapping(self, df):
+    def _name_mapping(self, df):
         '''
         Only a temporary fix, need to figure out longer term string matching solution
         '''
@@ -185,8 +187,11 @@ class PreprocessData:
 
         df['name'] = df['name'].replace(string_mapping)
         return df
+    
+    def _kickout_time_conversion(self, df):
+        df['kickoff_time'] = pd.to_datetime(df['kickoff_time'])
+        return df
+
 
     def get_preprocessed_data(self):
         return self.data
-         
-
