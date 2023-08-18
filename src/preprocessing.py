@@ -1,8 +1,16 @@
 import os
 import pandas as pd
+from .utilities import generate_fixture_mapping
 
 class PreprocessData:
-    def __init__(self, teams2021_path, teams2122_path, teams2223_path, gws2021_path, gws2122_path, gws2223_path):
+    def __init__(self,
+                teams2021_path, 
+                teams2122_path, 
+                teams2223_path, 
+                gws2021_path, 
+                gws2122_path, 
+                gws2223_path,
+                ):
         # Validate CSV file paths before reading
         self._validate_file_paths(teams2021_path, teams2122_path, teams2223_path, gws2021_path, gws2122_path, gws2223_path)
 
@@ -194,4 +202,60 @@ class PreprocessData:
 
 
     def get_preprocessed_data(self):
+        return self.data
+    
+class AddMatchOdds:
+    def __init__(self,
+                odds2021_path,
+                odds2122_path,
+                odds2223_path,
+                fixture_mapping_path):
+        
+        self.odds2021 = pd.read_csv(odds2021_path)
+        self.odds2122 = pd.read_csv(odds2122_path)
+        self.odds2223 = pd.read_csv(odds2223_path)
+        self.fixture_mappings = pd.read_csv(fixture_mapping_path)
+
+        self.odds2021 = self.odds_preprocessing(self.odds2021, '2020-21')
+        self.odds2122 = self.odds_preprocessing(self.odds2122, '2021-22')
+        self.odds2223 = self.odds_preprocessing(self.odds2223, '2022-23')
+
+        self.data = self._concat_data(self.odds2021, self.odds2122, self.odds2223)
+
+    def odds_preprocessing(self, df, season):
+        df = df.copy()
+        df = df[['HomeTeam', 'AwayTeam', 'B365H', 'B365D', 'B365A']]
+        team_name_mapping = {
+                "Tottenham":"Spurs",
+                "Man United" : "Man Utd",
+                "Sheffield United" : "Sheffield Utd"
+                }
+        df['HomeTeam'] = df['HomeTeam'].replace(team_name_mapping)
+        df['AwayTeam'] = df['AwayTeam'].replace(team_name_mapping)
+        df['season'] = season
+        return df
+    
+    def _concat_data(self, *dfs, axis=0, drop_null_columns=True):
+        """
+        Concatenate multiple DataFrames and optionally drop columns with null values.
+
+        Parameters:
+        *dfs (DataFrame): One or more DataFrames to concatenate.
+        axis (int, optional): Concatenation axis. Use 0 for rows (default), 1 for columns.
+        drop_null_columns (bool, optional): Whether to drop columns with null values (default=True).
+
+        Returns:
+        DataFrame: Concatenated DataFrame.
+        """
+        if not all(isinstance(df, pd.DataFrame) for df in dfs):
+            raise ValueError("All arguments must be DataFrames.")
+
+        concatenated_df = pd.concat(dfs, axis=axis)
+
+        if drop_null_columns:
+            concatenated_df = concatenated_df.dropna(axis=1)
+
+        return concatenated_df
+
+    def get_preprocessed_odds(self):
         return self.data

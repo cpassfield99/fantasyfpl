@@ -14,7 +14,7 @@ from tpot import TPOTRegressor
 class Modelling:
     def __init__(self, df, player_list, feature_candidates, model, model_hyperparameters=None):
         '''
-        Initialize the RandomForestIndividualPlayer object.
+        Initialize the Modelling object.
         
         Parameters:
             df (pd.DataFrame): The main DataFrame containing player data.
