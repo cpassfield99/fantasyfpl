@@ -224,7 +224,7 @@ class AddMatchOdds:
 
     def odds_preprocessing(self, df, season):
         df = df.copy()
-        df = df[['HomeTeam', 'AwayTeam', 'B365H', 'B365D', 'B365A']]
+        df = df[['HomeTeam', 'AwayTeam', 'B365H', 'B365D', 'B365A', 'B365>2.5']]
         team_name_mapping = {
                 "Tottenham":"Spurs",
                 "Man United" : "Man Utd",
@@ -233,6 +233,13 @@ class AddMatchOdds:
         df['HomeTeam'] = df['HomeTeam'].replace(team_name_mapping)
         df['AwayTeam'] = df['AwayTeam'].replace(team_name_mapping)
         df['season'] = season
+
+        odds_columns = ['B365H', 'B365D', 'B365A', 'B365>2.5']
+
+        for column in odds_columns:
+            median_value = df[column].median
+            df[column].fillna(median_value, inplace=True)
+
         return df
     
     def _concat_data(self, *dfs, axis=0, drop_null_columns=True):
@@ -254,7 +261,6 @@ class AddMatchOdds:
 
         if drop_null_columns:
             concatenated_df = concatenated_df.dropna(axis=1)
-
         return concatenated_df
 
     def get_preprocessed_odds(self):
@@ -293,5 +299,6 @@ def add_processed_odds(odds, fixture_mapping, player_data):
     all_data_with_odds['match_draw_odds'] = all_data_with_odds['B365D']
     all_data_with_odds['player_team_win_odds'] = np.where(all_data_with_odds['was_home_player'], all_data_with_odds['B365H'], all_data_with_odds['B365A'])
     all_data_with_odds['opponent_team_win_odds'] = np.where(all_data_with_odds['was_home_player'], all_data_with_odds['B365A'], all_data_with_odds['B365H'])
-    all_data_with_odds = all_data_with_odds.drop(columns = ['home_team', 'away_team', 'B365H', 'B365D', 'B365A'])
+    all_data_with_odds['over_2.5_goals'] = all_data_with_odds["B365>2.5"]
+    all_data_with_odds = all_data_with_odds.drop(columns = ['home_team', 'away_team', 'B365H', 'B365D', 'B365A', 'B365>2.5'])
     return all_data_with_odds
