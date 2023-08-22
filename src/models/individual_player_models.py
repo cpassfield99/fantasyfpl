@@ -104,7 +104,7 @@ class Modelling:
 
         for _ in range(num_feature_subsets):
 
-            selected_features = np.random.choice(X_train.columns, size=np.random.randint(6, len(X_train.columns) + 1), replace=False)
+            selected_features = np.random.choice(X_train.columns, size=np.random.randint(5, len(X_train.columns) + 1), replace=False)
             X_train_subset = X_train[selected_features]
             X_test_subset = X_test[selected_features]
             random_search = RandomizedSearchCV(
@@ -196,7 +196,7 @@ class Modelling:
         tpot.fit(X_train, y_train)
         print(tpot.score(X_test, y_test))
 
-    def optimise_feature_selection(self, num_feature_subsets=2):
+    def optimise_feature_selection(self, num_feature_subsets):
         '''
         Optimize feature selection for multiple players and count the occurrences of selected features.
         

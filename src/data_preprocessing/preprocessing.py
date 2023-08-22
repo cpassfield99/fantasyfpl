@@ -237,8 +237,9 @@ class AddMatchOdds:
         odds_columns = ['B365H', 'B365D', 'B365A', 'B365>2.5']
 
         for column in odds_columns:
-            median_value = df[column].median
+            median_value = df[column].median()
             df[column].fillna(median_value, inplace=True)
+            df[column] = df[column].astype(float)
 
         return df
     
@@ -297,8 +298,12 @@ def add_processed_odds(odds, fixture_mapping, player_data):
     fixtures_with_odds = fixtures_with_odds.drop(columns = ['HomeTeam','AwayTeam', 'season'])
     all_data_with_odds = player_data.merge(fixtures_with_odds, on = 'fixture_id_player', how= 'inner')
     all_data_with_odds['match_draw_odds'] = all_data_with_odds['B365D']
+    all_data_with_odds['match_draw_chance'] = 1/all_data_with_odds['match_draw_odds']
     all_data_with_odds['player_team_win_odds'] = np.where(all_data_with_odds['was_home_player'], all_data_with_odds['B365H'], all_data_with_odds['B365A'])
+    all_data_with_odds['player_win_chance'] = 1/all_data_with_odds['player_team_win_odds']
     all_data_with_odds['opponent_team_win_odds'] = np.where(all_data_with_odds['was_home_player'], all_data_with_odds['B365A'], all_data_with_odds['B365H'])
-    all_data_with_odds['over_2.5_goals'] = all_data_with_odds["B365>2.5"]
+    all_data_with_odds['player_lose_chance'] = 1/all_data_with_odds['opponent_team_win_odds']
+    all_data_with_odds['over_2.5_goals_odds'] = all_data_with_odds["B365>2.5"]
+    all_data_with_odds['chance_of_over_2.5_goals'] = 1/all_data_with_odds['over_2.5_goals_odds']
     all_data_with_odds = all_data_with_odds.drop(columns = ['home_team', 'away_team', 'B365H', 'B365D', 'B365A', 'B365>2.5'])
     return all_data_with_odds
