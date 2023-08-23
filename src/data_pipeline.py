@@ -10,7 +10,7 @@ loaded_data = PreprocessData('data/raw/2020-21/teams.csv',
                       'data/raw/2020-21/gws/merged_gw.csv', 
                       'data/raw/2021-22/gws/merged_gw.csv', 
                       'data/raw/2022-23/gws/merged_gw.csv')
-team_form = 5
+team_form = 10
 preprocessed_data = loaded_data.get_preprocessed_data()
 
 preprocessed_data.to_csv("data/interim/all_seasons_player_data.csv", index=False)
